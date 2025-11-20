@@ -1,0 +1,16 @@
+---
+- name: Configure lograte for custom-monitor service 
+  hosts: all
+  
+
+  tasks:
+  - name: Ensure log directory exists and permissions
+    ansible.builtin.file:
+      path: /var/log/custom-monitor/
+      state: directory
+      mode: '0755'
+
+  - name: Deploy configuration file 
+    ansible.builtin.template:
+      src: logrotate.d
+      dest: /etc/logrotate.d
