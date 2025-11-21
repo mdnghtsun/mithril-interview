@@ -26,7 +26,6 @@
       mode: '0755'
     tags: 
       - verify
-      - deploy
 
   # Deploy logrotate configuration file for /var/log/custom-monitor/*.log
   - name: Deploy configuration file 
