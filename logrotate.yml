@@ -18,6 +18,37 @@
     tags: 
       - never
 
+  - name: Fail playbook if log directory over 500mb
+    ansible.builtin.command:  du -h /var/log/custom-monitor | awk '{print $1}'
+    register: directory_size
+
+  - name: Fail palybook 
+    debug: directory_size
+    when: directory_size > 500
+
+  - name: Return list of log files ending in .gz extention
+    ansible.builtin.command: find /var/log/custom-monitor/ -mtime +30 -print
+    become: true
+    register: prune_result
+    tags: 
+      - prune
+    when: dry_run
+
+  - name: Removes log files ending in .gz extention older than 30 days
+    ansible.builtin.command: find /var/log/custom-monitor/ -mtime +30 -exec rm -f {} +
+    become: true
+    register: prune_result
+    tags: 
+      - prune
+    when: dry_run == False
+
+  - debug: 
+      var: prune_result
+    tags: 
+      - prune
+
+  
+
   # Ensure /var/log/custom-monitor/ exists and has correct permissions
   - name: Ensure log directory exists and permissions
     ansible.builtin.file:
@@ -37,4 +68,3 @@
       mode: '0644'
     tags: 
       - deploy
-
