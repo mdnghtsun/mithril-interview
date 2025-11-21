@@ -29,8 +29,8 @@
 
   # Deploy logrotate configuration file for /var/log/custom-monitor/*.log
   - name: Deploy configuration file 
-    ansible.builtin.template:
-      src: custom-monitor
+    ansible.builtin.copy:
+      src: logrotate-configs/custom-monitor
       dest: /etc/logrotate.d/custom-monitor
       owner: root
       group: root

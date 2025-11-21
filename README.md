@@ -42,6 +42,7 @@ Another thought was to paramterize the service name (i.e. custom-monitor) via ji
 ansible-playbook -i inventory.yml logrotate.yml --extra-vars "service_name=custom-monitor"
 ```
 
+Finally, there was some thought about the use of copy module versus template module. The Copy module is more apt for copying static files. The template module allows for jinga templating which would be ideal if we were handling multiple services which all had the same configuration requirements. Since the spec indicated only custom-monitor service, I decided to keep things and just include a static configuraiton file for custom-monitor that is mirrored to the host via the copy module. 
 
 
 ## Installation
@@ -74,9 +75,3 @@ ansible-playbook -i inventory.yml logrotate.yml --tags [never,verify,deploy] -v
 
 ## Authors
 [Sunny Mundra ](https://github.com/mdnghtsun)
-
-  # Check and start logrotate if not started
-  - name: Ensure logrotate started
-    ansible.builtin.systemd:
-      name: logrotate
-      state: started
