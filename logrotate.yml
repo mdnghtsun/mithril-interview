@@ -8,13 +8,13 @@
   - name: Get Logrotate Status
     ansible.builtin.systemd:
       name: logrotate
-    register: logrotate_status
+    register: logrotate_info
     tags: 
       - never
 
   # Print logrotate service status
   - debug: 
-      var: logrotate_status.status.ActiveState
+      var: logrotate_info.status.ActiveState
     tags: 
       - never
 
