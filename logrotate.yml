@@ -4,6 +4,20 @@
   become: true
 
   tasks:
+  # Check logrotate service status
+  - name: Get Logrotate Status
+    ansible.builtin.systemd:
+      name: logrotate
+    register: logrotate_status
+    tags: 
+      - never
+
+  # Print logrotate service status
+  - debug: 
+      var: logrotate_status.status.ActiveState
+    tags: 
+      - never
+
   # Ensure /var/log/custom-monitor/ exists and has correct permissions
   - name: Ensure log directory exists and permissions
     ansible.builtin.file:
@@ -12,16 +26,12 @@
       mode: '0755'
     tags: 
       - verify
+      - deploy
 
-  - name: Check /etc/logrotate.d/ directory
-    ansible.builtin.command: ls -a /etc/logrotate.d/
-    tags: 
-      - verify
-
-  # Deploy logrotate configuration for /var/log/custom-monitor/*.log
+  # Deploy logrotate configuration file for /var/log/custom-monitor/*.log
   - name: Deploy configuration file 
     ansible.builtin.template:
-      src: custom-monitor.d
+      src: custom-monitor
       dest: /etc/logrotate.d/custom-monitor
       owner: root
       group: root
